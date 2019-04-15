@@ -3,21 +3,24 @@ package com.example.chatsapp
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_feed.*
+
+
+
+
 
 class FeedActivity : AppCompatActivity() {
 
     lateinit var mAuth: FirebaseAuth
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    var chatMessagesList: ArrayList<String>
-
-    init {
-        chatMessagesList = ArrayList<String>()
-    }
+    var chatMessagesList: ArrayList<String> = ArrayList()
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -40,7 +43,6 @@ class FeedActivity : AppCompatActivity() {
             }
 
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -52,6 +54,12 @@ class FeedActivity : AppCompatActivity() {
         chatMessagesList.add("hello world")
         chatMessagesList.add("test strings")
 
+        val recyclerViewManager = LinearLayoutManager(applicationContext)
+
+        feedRecyclerView.layoutManager = recyclerViewManager
+        feedRecyclerView.itemAnimator = DefaultItemAnimator()
+
+        feedRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL,false)
         recyclerViewAdapter = RecyclerViewAdapter(chatMessagesList)
         feedRecyclerView.adapter = recyclerViewAdapter
 
