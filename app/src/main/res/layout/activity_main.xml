@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emailEditText"
+            android:layout_margin="10dp"
+            android:inputType="textEmailAddress"
+            android:hint="E-mail"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/passwordEditText"
+            android:layout_below="@id/emailEditText"
+            android:layout_margin="10dp"
+            android:inputType="textPassword"
+            android:hint="Password"/>
+
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordEditText"
+            android:id="@+id/signInButton"
+            android:background="#EE9D85"
+            android:text="Sign In"
+            android:onClick="signIn"
+            android:layout_margin="10dp"/>
+
+    <ProgressBar
+            android:id="@+id/signInProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordEditText"
+            android:layout_margin="10dp"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:layout_below="@id/signInButton"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:onClick="forgotPassword" android:layout_marginTop="10dp" android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" android:layout_marginBottom="10dp"/>
+
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:id="@+id/registerButton"
+            android:background="#EE9D85"
+            android:text="Sign Up"
+            android:onClick="signUp"
+    />
+</RelativeLayout>

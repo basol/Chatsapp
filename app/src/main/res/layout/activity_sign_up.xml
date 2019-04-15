@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".SignUpActivity"
+        android:layout_marginTop="100dp">
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/signUpNameEditText"
+            android:layout_margin="10dp"
+            android:inputType="text"
+            android:hint="Name"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/signUpLastNameEditText"
+            android:layout_below="@id/signUpNameEditText"
+            android:layout_margin="10dp"
+            android:inputType="text"
+            android:hint="LastName"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signUpLastNameEditText"
+            android:id="@+id/signUpEmailEditText"
+            android:layout_margin="10dp"
+            android:inputType="textEmailAddress"
+            android:hint="E-mail"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/signUpPasswordEditText"
+            android:layout_below="@id/signUpEmailEditText"
+            android:layout_margin="10dp"
+            android:inputType="textPassword"
+            android:hint="Password"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/signUpRePasswordEditText"
+            android:layout_below="@id/signUpPasswordEditText"
+            android:layout_margin="10dp"
+            android:inputType="textPassword"
+            android:hint="Re-Password"/>
+
+
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signUpRePasswordEditText"
+            android:id="@+id/signUpButton"
+            android:background="#EE9D85"
+            android:text="Sign Up"
+            android:onClick="signUp"
+            android:layout_margin="10dp"/>
+
+</RelativeLayout>
