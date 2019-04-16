@@ -27,8 +27,6 @@ class RecyclerViewAdapter(var chatMessages: ArrayList<String>) :
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-//        val shownMessage: TextView = itemView.findViewById(R.id.recycler_textView)
-
     }
 
 }

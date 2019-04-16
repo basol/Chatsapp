@@ -7,4 +7,28 @@
         android:layout_height="match_parent"
         tools:context=".ProfileActivity">
 
+    <ImageView
+            android:layout_width="@android:dimen/thumbnail_height"
+            android:layout_height="@android:dimen/thumbnail_width" app:srcCompat="@android:drawable/stat_sys_download"
+            android:id="@+id/profileImageView"
+            android:onClick="selectImage" android:layout_marginTop="103dp" android:layout_marginBottom="112dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/profileEditText"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/profileEditText"
+            android:hint="Nickname" app:layout_constraintTop_toBottomOf="@+id/profileImageView"
+            android:layout_marginBottom="74dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/profileSaveButton" app:layout_constraintStart_toStartOf="parent"/>
+    <Button
+            android:text="Save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/profileSaveButton" android:onClick="saveChanges"
+            app:layout_constraintTop_toBottomOf="@+id/profileEditText" android:layout_marginBottom="173dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </android.support.constraint.ConstraintLayout>
