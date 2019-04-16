@@ -9,10 +9,9 @@ import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_feed.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -70,19 +69,30 @@ class FeedActivity : AppCompatActivity() {
         feedRecyclerView.adapter = recyclerViewAdapter
 
         mAuth = FirebaseAuth.getInstance()
+        val user = mAuth.currentUser
         firebaseDatabase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDatabase.reference
 
         getMessages()
 
-        chatEditText.setOnEditorActionListener(object : OnEditorActionListener {
-            override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
-                if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
-                    sendMessage(chatEditText)
-                }
-                return false
+        OneSignal.startInit(this)
+            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+            .unsubscribeWhenNotificationsAreDisabled(true)
+            .init()
+
+
+        OneSignal.idsAvailable { userId, registrationId ->
+            databaseReference.child("Profiles").child(user?.uid!!).child("PlayerID").setValue(userId)
+        }
+
+
+
+        chatEditText.setOnEditorActionListener { _, actionId, event ->
+            if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                sendMessage(chatEditText)
             }
-        })
+            false
+        }
     }
 
 //    fun openSoftKeyboard(context: Context, view: View) {
@@ -113,7 +123,7 @@ class FeedActivity : AppCompatActivity() {
     }
 
 
-    fun getMessages(){
+    private fun getMessages(){
 
         val reference = firebaseDatabase.getReference("Chats")
 

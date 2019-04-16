@@ -1,7 +1,6 @@
 package com.example.chatsapp
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,15 +14,14 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
 
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ProfileActivity : AppCompatActivity() {
 
     lateinit var selectedImageUri: Uri
@@ -43,10 +41,35 @@ class ProfileActivity : AppCompatActivity() {
         firebaseDatabase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDatabase.getReference()
         storageReference = FirebaseStorage.getInstance().reference
+
+        getCurrentUser()
     }
 
 
-    @SuppressLint("ObsoleteSdkInt")
+    private fun getCurrentUser() {
+
+        val user = mAuth.currentUser
+        val reference = firebaseDatabase.getReference("Profiles/"+ user?.uid)
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                if (dataSnapshot.value != null) {
+
+                val hashMap = dataSnapshot.value as HashMap<*,*>
+
+                    profileEditText.setText(hashMap["nickname"] as? String)
+                    Picasso.get().load(hashMap["imageurl"] as? Uri).into(profileImageView)
+                }
+            }
+        })
+
+    }
+
+
     fun selectImage(view: View) {
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
