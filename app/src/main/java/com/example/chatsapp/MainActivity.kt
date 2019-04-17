@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
-            val intent = Intent(this,FeedActivity::class.java)
+            val intent = Intent(this,UserListActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
 
-                        val intent = Intent(this, FeedActivity::class.java)
+                        val intent = Intent(this, UserListActivity::class.java)
                         startActivity(intent)
                         finish()
 
