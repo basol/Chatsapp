@@ -20,9 +20,6 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-
-
 class FeedActivity : AppCompatActivity() {
 
     lateinit var mAuth: FirebaseAuth
@@ -81,11 +78,11 @@ class FeedActivity : AppCompatActivity() {
         databaseReference = firebaseDatabase.reference
         user = mAuth.currentUser!!
 
+        if(!TextUtils.isEmpty(intent.getStringExtra("targetUserID"))){
+            targetUserID = intent.getStringExtra("targetUserID")
+        }
 
-//        getTargetID()
         getMessages()
-        targetUserID = intent.getStringExtra("targetUserID")
-
 
         OneSignal.startInit(this)
             .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
@@ -107,6 +104,7 @@ class FeedActivity : AppCompatActivity() {
     fun sendMessage(view: View) {
 
         val messageToSend = chatEditText.text.toString()
+        var playerIDtoSendNotification = ""
 
         if (!TextUtils.isEmpty(messageToSend)) {
 
@@ -116,26 +114,48 @@ class FeedActivity : AppCompatActivity() {
             ordered.sort()
 
             val newPath = ordered[0]+"-"+ordered[1]
-//            Log.e("newpath", newPath)
             databaseReference.child("Chats").child(newPath).child(uuid).child("message").setValue(messageToSend)
             databaseReference.child("Chats").child(newPath).child(uuid).child("email").setValue(user.email)
             databaseReference.child("Chats").child(newPath).child(uuid).child("time").setValue(ServerValue.TIMESTAMP)
 
             chatEditText.setText("")
 
-            val str = "530b6bbe-4a14-4bfe-aaba-c99f9d142cb9"
+            val ref = FirebaseDatabase.getInstance().getReference("Profiles")
+            ref.addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
 
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    for (ds in dataSnapshot.children) {
+
+                        val hashMap = ds.value as HashMap<*, *>
+                        if (ds.key == targetUserID) {
+                            playerIDtoSendNotification = hashMap["PlayerID"].toString()
+                            Log.e("playerid in fun", playerIDtoSendNotification)
+                        }
+                    }
+
+                }
+            })
+            Log.e("player id", playerIDtoSendNotification)
             try {
-                OneSignal.postNotification(
-                    JSONObject("{'contents': {'en':'$messageToSend'}, 'include_player_ids': ['$str']}"),
-                    null
-                )
+                OneSignal.postNotification(JSONObject("{'contents': {'en':'$messageToSend'}, 'include_player_ids': ['$playerIDtoSendNotification']}"),
+                    object : OneSignal.PostNotificationResponseHandler {
+                        override fun onSuccess(response: JSONObject) {
+                            Log.i("OneSignalExample", "postNotification Success: $response")
+                        }
+
+                        override fun onFailure(response: JSONObject) {
+                            Log.e("OneSignalExample", "postNotification Failure: $response")
+                        }
+                    })
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
+
+            getMessages()
         }
-        getMessages()
-//        openSoftKeyboard(this, view)
     }
 
     private fun getMessages(){
@@ -143,10 +163,8 @@ class FeedActivity : AppCompatActivity() {
         val ordered = mutableListOf(user.uid, targetUserID)
         ordered.sort()
         val newPath = ordered[0]+"-"+ordered[1]
-        Log.e("newpath", newPath)
         val reference = firebaseDatabase.getReference("Chats/$newPath")
         val query = reference.orderByChild("time")
-
         query.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -157,7 +175,6 @@ class FeedActivity : AppCompatActivity() {
 
                 for (ds in dataSnapshot.children){
 
-                    Log.e("getmess", ds.value.toString())
                     val hashMap = ds.value as HashMap<*, *>
                     chatMessagesList.add(hashMap["email"].toString() + ": " + hashMap["message"].toString())
 

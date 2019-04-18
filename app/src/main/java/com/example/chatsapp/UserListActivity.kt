@@ -1,6 +1,7 @@
 package com.example.chatsapp
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -19,6 +20,7 @@ class UserListActivity : AppCompatActivity() {
     lateinit var user: FirebaseUser
     var userList: ArrayList<String> = ArrayList()
     var arrayAdapter: ArrayAdapter<String>? = null
+    var targetUserID = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,27 +42,7 @@ class UserListActivity : AppCompatActivity() {
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 Unit
 
-                val ref = firebaseDatabase.getReference("Profiles")
-                var targetUserID = ""
-                ref.addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                    }
-
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                        for (ds in dataSnapshot.children) {
-
-                            val hashMap = ds.value as java.util.HashMap<*, *>
-                            if (hashMap["email"] == userList[position]) {
-                                targetUserID = ds.key.toString()
-                            }
-                        }
-                    }
-                })
-                val intent = Intent(this, FeedActivity::class.java)
-                intent.putExtra("targetUserID", targetUserID)
-                startActivity(intent)
-
+                GetID().execute(position.toString())
 
             }
 
@@ -96,6 +78,39 @@ class UserListActivity : AppCompatActivity() {
 
         })
 
+
+    }
+
+    inner class GetID: AsyncTask<String, Void, String>() {
+
+        override fun doInBackground(vararg params: String?): String {
+
+            val ref = FirebaseDatabase.getInstance().getReference("Profiles")
+            ref.addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    for (ds in dataSnapshot.children) {
+
+                        val hashMap = ds.value as java.util.HashMap<*, *>
+                        if (hashMap["email"] == userList[params[0]!!.toInt()]) {
+                            targetUserID = ds.key.toString()
+
+                        }
+                    }
+                }
+            })
+            Thread.sleep(500)
+            return targetUserID
+        }
+
+        override fun onPostExecute(result: String?) {
+            val intent = Intent(applicationContext, FeedActivity::class.java)
+            intent.putExtra("targetUserID", targetUserID)
+            startActivity(intent)
+        }
 
     }
 
