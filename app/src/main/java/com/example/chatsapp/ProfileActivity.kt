@@ -1,6 +1,7 @@
 package com.example.chatsapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -70,6 +71,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("ObsoleteSdkInt")
     fun selectImage(view: View) {
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -131,7 +133,7 @@ class ProfileActivity : AppCompatActivity() {
                 databaseReference.child("Profiles").child(user.uid).child("imageurl").setValue(downloadURL)
 
 
-                val intent = Intent(this, FeedActivity::class.java)
+                val intent = Intent(this, UserListActivity::class.java)
                 startActivity(intent)
 
             }

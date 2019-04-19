@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.onesignal.OneSignal
 import kotlinx.android.synthetic.main.activity_user_list.*
 
 class UserListActivity : AppCompatActivity() {
@@ -30,7 +31,7 @@ class UserListActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         user = mAuth.currentUser!!
         firebaseDatabase = FirebaseDatabase.getInstance()
-
+        databaseReference = firebaseDatabase.reference
         getUserList()
 
         arrayAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, userList)
@@ -45,6 +46,10 @@ class UserListActivity : AppCompatActivity() {
                 GetID().execute(position.toString())
 
             }
+
+        OneSignal.idsAvailable { userId, registrationId ->
+            databaseReference.child("Profiles").child(user.uid).child("PlayerID").setValue(userId)
+        }
 
     }
 

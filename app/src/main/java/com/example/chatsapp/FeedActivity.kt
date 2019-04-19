@@ -88,9 +88,9 @@ class FeedActivity : AppCompatActivity() {
             .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
             .unsubscribeWhenNotificationsAreDisabled(true)
             .init()
-        OneSignal.idsAvailable { userId, registrationId ->
-            databaseReference.child("Profiles").child(user.uid).child("PlayerID").setValue(userId)
-        }
+//        OneSignal.idsAvailable { userId, registrationId ->
+//            databaseReference.child("Profiles").child(user.uid).child("PlayerID").setValue(userId)
+//        }
         chatEditText.setOnEditorActionListener { _, actionId, event ->
             if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                 sendMessage(chatEditText)
@@ -130,9 +130,12 @@ class FeedActivity : AppCompatActivity() {
                     for (ds in dataSnapshot.children) {
 
                         val hashMap = ds.value as HashMap<*, *>
+//                        Log.e("userid", ds.key)
+//                        Log.e("ttarget", targetUserID)
                         if (ds.key == targetUserID) {
+//                            Log.e("inside of if block", ds.key)
                             playerIDtoSendNotification = hashMap["PlayerID"].toString()
-                            Log.e("playerid in fun", playerIDtoSendNotification)
+//                            Log.e("playerid in fun", "heh$playerIDtoSendNotification")
                         }
                     }
 
